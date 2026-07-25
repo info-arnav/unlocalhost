@@ -147,6 +147,27 @@ export class DeployService {
         });
 
         transcript.push(`Applied ${Object.keys(envForApp).length} env vars`);
+
+        await rm(join(workdir, '.git'), { recursive: true, force: true });
+        await run('git', ['-C', workdir, 'init', '--initial-branch=main']);
+        await run('git', [
+          '-C',
+          workdir,
+          'config',
+          'user.email',
+          'deploy@unlocalhost.tech',
+        ]);
+        await run('git', ['-C', workdir, 'config', 'user.name', 'unlocalhost']);
+        await run('git', ['-C', workdir, 'add', '-A']);
+        await run('git', [
+          '-C',
+          workdir,
+          'commit',
+          '--quiet',
+          '-m',
+          `deploy ${commitSha}`,
+        ]);
+
         transcript.push('Pushing to build system');
 
         const { stdout: pushOut, stderr: pushErr } = await run(
