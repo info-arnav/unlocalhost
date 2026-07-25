@@ -101,6 +101,12 @@ services:
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
       GITHUB_APP_PRIVATE_KEY_PATH: /app/server/secrets/github-app.pem
       GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET}
+      DOKKU_HOST: ${DOKKU_HOST}
+      DOKKU_USER: ${DOKKU_USER}
+      DOKKU_SSH_KEY_PATH: /app/server/secrets/dokku_ed25519
+      DOKKU_COMMAND_TIMEOUT_MS: ${DOKKU_COMMAND_TIMEOUT_MS}
+      DOKKU_APP_HTTP_PORT: ${DOKKU_APP_HTTP_PORT}
+      DOKKU_APP_CONTAINER_PORT: ${DOKKU_APP_CONTAINER_PORT}
       SENTRY_DSN: ${SENTRY_DSN}
     volumes:
       - ./secrets:/app/server/secrets:ro
@@ -173,7 +179,15 @@ services:
       IDLE_TIMEOUT_MS: ${IDLE_TIMEOUT_MS}
       SWEEP_INTERVAL_MS: ${SWEEP_INTERVAL_MS}
       COLD_START_TIMEOUT_MS: ${COLD_START_TIMEOUT_MS}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      UPSTREAM_ORIGIN: ${UPSTREAM_ORIGIN}
+      DOKKU_HOST: ${DOKKU_HOST}
+      DOKKU_USER: ${DOKKU_USER}
+      DOKKU_SSH_KEY_PATH: /app/server/secrets/dokku_ed25519
+      DOKKU_COMMAND_TIMEOUT_MS: ${DOKKU_COMMAND_TIMEOUT_MS}
       SENTRY_DSN: ${SENTRY_DSN}
+    volumes:
+      - ./secrets:/app/server/secrets:ro
     healthcheck:
       test:
         [
