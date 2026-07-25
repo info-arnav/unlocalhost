@@ -1,5 +1,12 @@
 name: unlocalhost
 
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  stop_grace_period: 15s
+  build:
+    context: ..
+    dockerfile: server/Dockerfile
+
 services:
   postgres:
     image: postgres:18.2-alpine
@@ -17,50 +24,102 @@ services:
       retries: 5
     stop_grace_period: 30s
 
-  control-plane:
+  redis:
+    image: redis:8.4-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    stop_grace_period: 15s
+
+  gateway:
+    <<: *service-defaults
     build:
       context: ..
       dockerfile: server/Dockerfile
-      target: control-plane
-    restart: unless-stopped
+      target: gateway
     depends_on:
-      postgres:
+      redis:
         condition: service_healthy
+      control-plane:
+        condition: service_started
     environment:
       NODE_ENV: ${NODE_ENV}
-      PORT: 7000
-      DATABASE_URL: ${DATABASE_URL}
+      RELEASE: ${RELEASE}
+      PORT: 8000
       BASE_DOMAIN: ${BASE_DOMAIN}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      MAX_CONCURRENT_BUILDS: ${MAX_CONCURRENT_BUILDS}
-      BUILD_TIMEOUT_MS: ${BUILD_TIMEOUT_MS}
+      REDIS_URL: ${REDIS_URL}
+      CONTROL_PLANE_URL: ${CONTROL_PLANE_URL}
+      RATE_LIMIT_POINTS: ${RATE_LIMIT_POINTS}
+      RATE_LIMIT_DURATION_SEC: ${RATE_LIMIT_DURATION_SEC}
+      SENTRY_DSN: ${SENTRY_DSN}
     healthcheck:
       test:
         [
           'CMD',
           'node',
           '-e',
-          "fetch('http://localhost:7000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+          "fetch('http://localhost:8000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
         ]
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 10s
-    stop_grace_period: 15s
 
-  auth-gate:
+  control-plane:
+    <<: *service-defaults
     build:
       context: ..
       dockerfile: server/Dockerfile
-      target: auth-gate
-    restart: unless-stopped
+      target: control-plane
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV}
+      RELEASE: ${RELEASE}
+      PORT: 7100
+      DATABASE_URL: ${DATABASE_URL}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      MAX_CONCURRENT_BUILDS: ${MAX_CONCURRENT_BUILDS}
+      BUILD_TIMEOUT_MS: ${BUILD_TIMEOUT_MS}
+      SENTRY_DSN: ${SENTRY_DSN}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:7100/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  auth-gate:
+    <<: *service-defaults
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      target: auth-gate
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      RELEASE: ${RELEASE}
       PORT: 7001
       DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
       BASE_DOMAIN: ${BASE_DOMAIN}
       SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME}
       AUTH_SECRET: ${AUTH_SECRET}
@@ -68,6 +127,7 @@ services:
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      SENTRY_DSN: ${SENTRY_DSN}
     healthcheck:
       test:
         [
@@ -80,24 +140,25 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-    stop_grace_period: 15s
 
   activator:
+    <<: *service-defaults
     build:
       context: ..
       dockerfile: server/Dockerfile
       target: activator
-    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV}
+      RELEASE: ${RELEASE}
       PORT: 7002
       DATABASE_URL: ${DATABASE_URL}
       IDLE_TIMEOUT_MS: ${IDLE_TIMEOUT_MS}
       SWEEP_INTERVAL_MS: ${SWEEP_INTERVAL_MS}
       COLD_START_TIMEOUT_MS: ${COLD_START_TIMEOUT_MS}
+      SENTRY_DSN: ${SENTRY_DSN}
     healthcheck:
       test:
         [
@@ -110,14 +171,15 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-    stop_grace_period: 15s
 
   caddy:
-    image: caddy:2.10-alpine
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
+      - gateway
       - auth-gate
-      - control-plane
       - activator
     ports:
       - '80:80'
@@ -136,5 +198,6 @@ services:
 
 volumes:
   pgdata:
+  redisdata:
   caddy-data:
   caddy-config:

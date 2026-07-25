@@ -3,9 +3,11 @@ import { contextMiddleware } from '@unlocalhost/shared/context';
 import {
   createErrorMiddleware,
   forbidden,
+  notFound,
   tooManyRequests,
 } from '@unlocalhost/shared/error';
 import { createHttpLogger, type Logger } from '@unlocalhost/shared/logger';
+import { internalHeaders } from '@unlocalhost/shared/security';
 import cors from 'cors';
 import express, {
   type Express,
@@ -94,8 +96,13 @@ export function createApp(
       target: config.CONTROL_PLANE_URL,
       changeOrigin: true,
       xfwd: true,
+      headers: internalHeaders(config.INTERNAL_AUTH_KEY, 'gateway'),
     }),
   );
+
+  app.use((req, _res, next) => {
+    next(notFound('NOT_FOUND', `No route for ${req.method} ${req.path}`));
+  });
 
   app.use(createErrorMiddleware(logger));
 

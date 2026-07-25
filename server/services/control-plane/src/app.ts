@@ -1,14 +1,24 @@
+import { contextMiddleware } from '@unlocalhost/shared/context';
+import type { Database } from '@unlocalhost/shared/db';
+import { createErrorMiddleware, notFound } from '@unlocalhost/shared/error';
+import { createHttpLogger, type Logger } from '@unlocalhost/shared/logger';
+import { createInternalAuth } from '@unlocalhost/shared/security';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
-import type { Database } from '@unlocalhost/db';
 import type { Config } from './config.js';
 
-export function createApp(config: Config, db: Database): Express {
+export function createApp(
+  config: Config,
+  db: Database,
+  logger: Logger,
+): Express {
   const app = express();
 
   app.disable('x-powered-by');
+  app.set('trust proxy', 1);
+  app.use(contextMiddleware);
+  app.use(createHttpLogger(logger));
   app.use(helmet());
-  app.use(express.json({ limit: '1mb' }));
 
   app.get('/healthz', (_req, res) => {
     res.status(200).json({ status: 'ok' });
@@ -23,7 +33,14 @@ export function createApp(config: Config, db: Database): Express {
     }
   });
 
-  void config;
+  app.use(createInternalAuth(config.INTERNAL_AUTH_KEY, 'control-plane'));
+  app.use(express.json({ limit: '1mb' }));
+
+  app.use((req, _res, next) => {
+    next(notFound('NOT_FOUND', `No route for ${req.method} ${req.path}`));
+  });
+
+  app.use(createErrorMiddleware(logger));
 
   return app;
 }

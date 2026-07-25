@@ -5,3 +5,4 @@ export * from './cache/index.js';
 export * from './error/index.js';
 export * from './context/index.js';
 export * from './observability/index.js';
+export * from './security/index.js';

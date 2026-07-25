@@ -2,7 +2,7 @@
   "name": "unlocalhost",
   "version": "0.0.0",
   "private": true,
-  "description": "Turn localhost into a shareable link — with authentication built in.",
+  "description": "Turn localhost into a shareable link \u2014 with authentication built in.",
   "license": "MIT",
   "author": "Arnav Gupta (info-arnav)",
   "repository": {
@@ -14,7 +14,9 @@
   },
   "workspaces": [
     "web",
-    "server/*"
+    "server/gateway",
+    "server/services/*",
+    "server/shared"
   ],
   "scripts": {
     "dev": "npm run dev --workspace=web",

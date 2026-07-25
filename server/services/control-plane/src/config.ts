@@ -5,10 +5,11 @@ const schema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-  PORT: z.coerce.number().int().positive().default(7000),
+  PORT: z.coerce.number().int().positive().default(7100),
   DATABASE_URL: z.string().min(1),
   BASE_DOMAIN: z.string().min(1),
   ENCRYPTION_KEY: z.string().min(32),
+  INTERNAL_AUTH_KEY: z.string().min(32),
   MAX_CONCURRENT_BUILDS: z.coerce.number().int().positive().max(4).default(1),
   BUILD_TIMEOUT_MS: z.coerce.number().int().positive().default(600_000),
   SENTRY_DSN: z.string().optional(),

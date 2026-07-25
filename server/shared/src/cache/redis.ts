@@ -1,19 +1,18 @@
-import Redis, { type Redis as RedisClient } from 'ioredis';
+import { Redis } from 'ioredis';
 
-export type { RedisClient };
+export type RedisClient = Redis;
 
-let client: RedisClient | null = null;
+let client: Redis | null = null;
 
-export function createRedis(url: string): RedisClient {
+export function createRedis(url: string): Redis {
   return new Redis(url, {
     connectTimeout: 2000,
     maxRetriesPerRequest: 1,
     enableReadyCheck: true,
-    lazyConnect: false,
   });
 }
 
-export function getRedis(url: string): RedisClient {
+export function getRedis(url: string): Redis {
   client ??= createRedis(url);
   return client;
 }

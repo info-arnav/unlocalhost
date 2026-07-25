@@ -1,5 +1,5 @@
-import pino, { type Logger } from 'pino';
-import pinoHttp from 'pino-http';
+import { pino, type Logger } from 'pino';
+import { pinoHttp } from 'pino-http';
 import { redactPaths } from './redact.js';
 
 export type { Logger };
