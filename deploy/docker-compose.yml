@@ -113,6 +113,8 @@ services:
       SENTRY_DSN: ${SENTRY_DSN}
     volumes:
       - ./secrets:/app/server/secrets:ro
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     healthcheck:
       test:
         [
