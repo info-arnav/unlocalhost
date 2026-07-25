@@ -38,6 +38,10 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
   },
+  "overrides": {
+    "postcss": "^8.5.23",
+    "sharp": "^0.35.3"
+  },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
       "eslint --fix",
