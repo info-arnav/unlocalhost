@@ -39,6 +39,14 @@
     "./security": {
       "types": "./dist/security/index.d.ts",
       "default": "./dist/security/index.js"
+    },
+    "./crypto": {
+      "types": "./dist/crypto/index.d.ts",
+      "default": "./dist/crypto/index.js"
+    },
+    "./domain": {
+      "types": "./dist/domain/index.d.ts",
+      "default": "./dist/domain/index.js"
     }
   },
   "scripts": {
@@ -52,6 +60,7 @@
     "@sentry/node": "^10.68.0",
     "drizzle-orm": "^0.45.2",
     "ioredis": "^5.11.1",
+    "jose": "^6.2.4",
     "pg": "^8.22.0",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",

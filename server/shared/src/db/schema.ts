@@ -65,6 +65,49 @@ export const apps = pgTable(
   ],
 );
 
+export const deviceAuthorizations = pgTable(
+  'device_authorizations',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    deviceCodeHash: text('device_code_hash').notNull(),
+    userCode: text('user_code').notNull(),
+    userId: uuid('user_id').references(() => users.id, {
+      onDelete: 'cascade',
+    }),
+    approvedAt: timestamp('approved_at', { withTimezone: true }),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('device_auth_device_code_key').on(table.deviceCodeHash),
+    unique('device_auth_user_code_key').on(table.userCode),
+  ],
+);
+
+export const apiTokens = pgTable(
+  'api_tokens',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    tokenHash: text('token_hash').notNull(),
+    label: text('label').notNull().default('mcp'),
+    lastUsedAt: timestamp('last_used_at', { withTimezone: true }),
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    unique('api_tokens_token_hash_key').on(table.tokenHash),
+    index('api_tokens_user_id_idx').on(table.userId),
+  ],
+);
+
 export const allowlist = pgTable(
   'allowlist',
   {

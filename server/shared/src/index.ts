@@ -6,3 +6,5 @@ export * from './error/index.js';
 export * from './context/index.js';
 export * from './observability/index.js';
 export * from './security/index.js';
+export * from './crypto/index.js';
+export * from './domain/index.js';

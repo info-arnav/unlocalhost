@@ -9,6 +9,7 @@ const schema = z.object({
   DATABASE_URL: z.string().min(1),
   REDIS_URL: z.string().min(1),
   BASE_DOMAIN: z.string().min(1),
+  WEB_ORIGIN: z.url(),
   SESSION_COOKIE_NAME: z.string().min(1).default('unlocalhost_session'),
   AUTH_SECRET: z.string().min(32),
   GITHUB_APP_CLIENT_ID: z.string().min(1),

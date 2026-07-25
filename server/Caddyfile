@@ -9,6 +9,16 @@
 	}
 }
 
+{$BASE_DOMAIN} {
+	import wildcard_tls
+	redir https://www.{$BASE_DOMAIN}{uri} permanent
+}
+
+www.{$BASE_DOMAIN} {
+	import wildcard_tls
+	reverse_proxy web:3000
+}
+
 app.{$BASE_DOMAIN} {
 	import wildcard_tls
 	reverse_proxy web:3000
