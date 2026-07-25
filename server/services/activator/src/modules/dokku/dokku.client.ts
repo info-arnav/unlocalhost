@@ -95,6 +95,30 @@ export class DokkuClient {
     ]).catch(() => undefined);
   }
 
+  async setPorts(
+    app: string,
+    hostPort: number,
+    containerPort: number,
+  ): Promise<void> {
+    this.assertAppName(app);
+
+    if (!Number.isInteger(hostPort) || !Number.isInteger(containerPort)) {
+      throw new Error('Port mappings must be integers');
+    }
+
+    await this.exec(['ports:set', app, `http:${hostPort}:${containerPort}`]);
+  }
+
+  async setDomain(app: string, domain: string): Promise<void> {
+    this.assertAppName(app);
+
+    if (!/^[a-z0-9.-]+$/.test(domain)) {
+      throw new Error(`Unsafe domain: ${domain}`);
+    }
+
+    await this.exec(['domains:set', app, domain]);
+  }
+
   async start(app: string): Promise<void> {
     this.assertAppName(app);
     await this.exec(['ps:start', app]);

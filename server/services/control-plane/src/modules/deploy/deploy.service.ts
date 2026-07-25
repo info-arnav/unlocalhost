@@ -113,6 +113,15 @@ export class DeployService {
 
         await this.dokku.createApp(app.subdomain);
         await this.dokku.ensureStorage(app.subdomain, '/app/data');
+        await this.dokku.setDomain(
+          app.subdomain,
+          `${app.subdomain}.${this.config.BASE_DOMAIN}`,
+        );
+        await this.dokku.setPorts(
+          app.subdomain,
+          this.config.DOKKU_APP_HTTP_PORT,
+          this.config.DOKKU_APP_CONTAINER_PORT,
+        );
 
         if (input.env && Object.keys(input.env).length > 0) {
           await this.repository.replaceEnvVars(

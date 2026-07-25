@@ -24,6 +24,8 @@ const schema = z.object({
   DOKKU_USER: z.string().min(1).default('dokku'),
   DOKKU_SSH_KEY_PATH: z.string().min(1),
   DOKKU_COMMAND_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
+  DOKKU_APP_HTTP_PORT: z.coerce.number().int().positive().default(8080),
+  DOKKU_APP_CONTAINER_PORT: z.coerce.number().int().positive().default(5000),
   MAX_CONCURRENT_BUILDS: z.coerce.number().int().positive().max(4).default(1),
   BUILD_TIMEOUT_MS: z.coerce.number().int().positive().default(600_000),
   SENTRY_DSN: z.string().optional(),
