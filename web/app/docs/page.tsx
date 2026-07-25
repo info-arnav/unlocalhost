@@ -114,6 +114,15 @@ export default function DocsPage() {
             into your app when it builds.
           </p>
 
+          <h2>Storing data</h2>
+          <p>
+            Every app gets a disk at <code>/app/data</code> that survives
+            restarts and redeploys, and a <code>DATABASE_PATH</code> variable
+            pointing at <code>/app/data/app.db</code>. Tell your agent to use
+            SQLite there. There is no managed Postgres, and anything written
+            outside that folder is lost on the next deploy.
+          </p>
+
           <h2>When something breaks</h2>
           <p>
             Ask for the logs. Your agent can read the build output, find the

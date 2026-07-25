@@ -67,6 +67,16 @@ If the deploy fails because we cannot read the repository, the tool returns an
 install URL. Show it to the user and ask them to install the GitHub App on that
 repository, then try again.
 
+## Storing data
+
+Every deployed app gets a persistent disk mounted at \`/app/data\` that survives
+restarts and redeploys, and an environment variable \`DATABASE_PATH\` pointing at
+\`/app/data/app.db\`.
+
+If the app needs to store anything, use SQLite at \`process.env.DATABASE_PATH\`.
+Do not reach for Postgres or MySQL. There is no managed database, and anything
+written outside \`/app/data\` is lost on the next deploy.
+
 ## Rules
 
 - Never commit a \`.env\` file or any credential.

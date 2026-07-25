@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@/components/analytics';
 import { site } from '@/lib/site';
 import './globals.css';
 
@@ -81,6 +82,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <Analytics id={process.env.NEXT_PUBLIC_GA_ID} />
       </body>
     </html>
   );

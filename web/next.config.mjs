@@ -6,11 +6,13 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${
+    isDev ? " 'unsafe-eval'" : ''
+  }`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  'img-src \'self\' data: blob: https://www.googletagmanager.com https://*.google-analytics.com',
   "font-src 'self'",
-  `connect-src 'self' https://api.${baseDomain} https://auth.${baseDomain}${
+  `connect-src 'self' https://api.${baseDomain} https://auth.${baseDomain} https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com${
     isDev ? ' ws: http://localhost:*' : ''
   }`,
   `form-action 'self' https://auth.${baseDomain} https://github.com https://accounts.google.com`,
