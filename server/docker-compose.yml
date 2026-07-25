@@ -82,11 +82,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV}
       RELEASE: ${RELEASE}
       PORT: 7100
       DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
       BASE_DOMAIN: ${BASE_DOMAIN}
       WEB_ORIGIN: ${WEB_ORIGIN}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
