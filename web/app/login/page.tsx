@@ -56,8 +56,7 @@ export default async function LoginPage({
       blurb="This app is private. Sign in so we can check you are on the guest list."
       foot={
         <>
-          Protected by unlocalhost. We only read your name and email.{' '}
-          <a href="/privacy">What we store</a>
+          We only read your name and email. <a href="/privacy">What we store</a>
         </>
       }
     >

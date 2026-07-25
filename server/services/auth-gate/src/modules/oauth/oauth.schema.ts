@@ -15,3 +15,10 @@ export const callbackQuerySchema = z.object({
 
 export type ProviderParam = z.infer<typeof providerParamSchema>;
 export type CallbackQuery = z.infer<typeof callbackQuerySchema>;
+
+export const installCallbackSchema = z.object({
+  code: z.string().min(1),
+  installation_id: z.string().min(1),
+});
+
+export type InstallCallbackQuery = z.infer<typeof installCallbackSchema>;

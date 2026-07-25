@@ -2,7 +2,11 @@ import { badRequest, unauthorized } from '@unlocalhost/shared/error';
 import type { NextFunction, Request, Response } from 'express';
 import type { SessionService } from '@unlocalhost/shared/session';
 import type { UsersRepository } from '../users/users.repository.js';
-import { callbackQuerySchema, providerParamSchema } from './oauth.schema.js';
+import {
+  callbackQuerySchema,
+  installCallbackSchema,
+  providerParamSchema,
+} from './oauth.schema.js';
 import type { OAuthService } from './oauth.service.js';
 import type { StateService } from './state.service.js';
 
@@ -12,6 +16,7 @@ export class OAuthController {
     private readonly sessions: SessionService,
     private readonly state: StateService,
     private readonly users: UsersRepository,
+    private readonly webOrigin: string,
   ) {}
 
   authorize = async (
@@ -91,6 +96,51 @@ export class OAuthController {
 
       this.sessions.attach(res, token);
       res.redirect(302, stored.returnTo);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  install = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const query = installCallbackSchema.safeParse(req.query);
+
+      if (!query.success) {
+        next(
+          badRequest(
+            'INVALID_INSTALL_CALLBACK',
+            'GitHub did not send an installation to record',
+          ),
+        );
+        return;
+      }
+
+      const identity = await this.service.verifyCallback(
+        'github',
+        query.data.code,
+      );
+
+      const userId = await this.users.upsertByGithubId({
+        githubId: identity.providerAccountId,
+        githubLogin: identity.name,
+        email: identity.email,
+      });
+
+      await this.users.setInstallationId(userId, query.data.installation_id);
+
+      const token = await this.sessions.issue({
+        email: identity.email,
+        name: identity.name,
+        provider: identity.provider,
+        userId,
+      });
+
+      this.sessions.attach(res, token);
+      res.redirect(302, `${this.webOrigin}/connect`);
     } catch (error) {
       next(error);
     }

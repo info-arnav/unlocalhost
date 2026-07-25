@@ -34,4 +34,14 @@ export class UsersRepository {
 
     return existing.id;
   }
+
+  async setInstallationId(
+    userId: string,
+    installationId: string,
+  ): Promise<void> {
+    await this.db
+      .update(users)
+      .set({ githubInstallationId: installationId })
+      .where(eq(users.id, userId));
+  }
 }

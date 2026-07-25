@@ -67,6 +67,7 @@ export function createApp(
     sessions,
     state,
     new UsersRepository(db),
+    config.WEB_ORIGIN,
   );
 
   const allowlistRepository = new AllowlistRepository(db, redis);

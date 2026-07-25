@@ -97,10 +97,7 @@ export function SiteFooter() {
             info-arnav
           </a>
         </span>
-        <span className={styles.status}>
-          <i />
-          All systems normal
-        </span>
+        <span>MIT licensed</span>
       </div>
     </footer>
   );
