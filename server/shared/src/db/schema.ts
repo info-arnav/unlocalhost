@@ -29,6 +29,7 @@ export const users = pgTable(
     githubId: text('github_id').notNull(),
     email: text('email').notNull(),
     githubLogin: text('github_login').notNull(),
+    githubInstallationId: text('github_installation_id'),
     scopedTokenEncrypted: text('scoped_token_encrypted'),
     createdAt: timestamp('created_at', { withTimezone: true })
       .notNull()
@@ -48,6 +49,7 @@ export const apps = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     subdomain: text('subdomain').notNull(),
+    repoFullName: text('repo_full_name'),
     repoUrl: text('repo_url'),
     containerId: text('container_id'),
     status: appStatus('status').notNull().default('building'),

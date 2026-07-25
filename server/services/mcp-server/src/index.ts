@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { loadConfig } from './config.js';
-
-const config = loadConfig();
+import { config } from './config.js';
 
 const server = new McpServer({
   name: 'unlocalhost',
@@ -24,8 +22,9 @@ server.registerTool(
         type: 'text',
         text: JSON.stringify(
           {
-            instance: config.UNLOCALHOST_URL,
-            authenticated: config.UNLOCALHOST_TOKEN !== undefined,
+            instance: config.instance,
+            authenticated: config.token !== undefined,
+            configPath: config.configPath,
           },
           null,
           2,
