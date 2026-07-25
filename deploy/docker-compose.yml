@@ -223,6 +223,12 @@ services:
     build:
       context: ..
       dockerfile: web/Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_DOMAIN: ${BASE_DOMAIN}
+        NEXT_PUBLIC_WEB_ORIGIN: ${WEB_ORIGIN}
+        NEXT_PUBLIC_API_ORIGIN: https://api.${BASE_DOMAIN}
+        NEXT_PUBLIC_AUTH_ORIGIN: https://auth.${BASE_DOMAIN}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
     restart: unless-stopped
     stop_grace_period: 15s
     environment:
