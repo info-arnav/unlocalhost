@@ -7,24 +7,41 @@ authenticated link — deploy + auth + MCP in one open-source, self-hostable pro
 
 | Path | What it is |
 |---|---|
-| `web/` | Next.js dashboard |
-| `server/control-plane/` | Express API: GitHub App flow, deploy orchestration, Postgres |
-| `server/auth-gate/` | Login + forward-auth service (Express + Auth.js) |
-| `server/mcp-server/` | The MCP server users connect to their coding agent |
-| `server/activator/` | Scale-to-zero watcher |
-| `server/docker-compose.yml`, `server/Dockerfile`, `server/Caddyfile` | Local + production infrastructure |
+| `web/` | Landing page, sign in screens, docs |
+| `server/gateway/` | Public API ingress: CORS, rate limiting, request ids |
+| `server/services/auth-gate/` | OAuth, sessions, and the allowlist check on every request |
+| `server/services/control-plane/` | Apps, sharing, GitHub App, deploy pipeline |
+| `server/services/activator/` | Wakes sleeping apps, sleeps idle ones |
+| `server/services/mcp-server/` | The `unlocalhost` npm package your agent talks to |
+| `server/shared/` | Database, logging, crypto, errors, sessions, security |
+| `deploy/` | Compose stack, Caddyfile, env, secrets |
+| `docs/` | Internal notes, gitignored |
 
 ## Getting started
+
+Everything is one npm workspace, so a single install covers the frontend and
+every backend service.
 
 ```bash
 git clone https://github.com/info-arnav/unlocalhost.git
 cd unlocalhost
-npm install          # server workspaces
-cd web && npm install
+npm install
+npm run build
 ```
 
-Copy `server/.env.example` to `server/.env` to configure local values. Never commit real
+Copy `deploy/.env.example` to `deploy/.env` to configure local values. Never commit real
 credentials — `.env` files are gitignored and a pre-commit hook enforces it.
+
+Useful commands:
+
+```bash
+npm run dev                    # the Next.js site
+npm run build                  # shared first, then every workspace
+npm run typecheck
+npm run lint
+npm run db:generate            # after changing the Drizzle schema
+npm run db:migrate
+```
 
 ## How to contribute
 
