@@ -70,3 +70,11 @@ COPY --from=build /app/server/services/activator/dist ./server/services/activato
 COPY --from=build /app/server/services/activator/package.json ./server/services/activator/
 EXPOSE 7002
 CMD ["node", "server/services/activator/dist/index.js"]
+
+FROM base AS migrate
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/server/shared ./server/shared
+WORKDIR /app/server/shared
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["npx", "drizzle-kit", "migrate"]

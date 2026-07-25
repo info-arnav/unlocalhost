@@ -201,12 +201,52 @@ services:
       retries: 3
       start_period: 10s
 
+  migrate:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      target: migrate
+    profiles: ['tools']
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    restart: 'no'
+
+  web:
+    build:
+      context: ..
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    stop_grace_period: 15s
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: 3000
+      NEXT_PUBLIC_BASE_DOMAIN: ${BASE_DOMAIN}
+      NEXT_PUBLIC_WEB_ORIGIN: ${WEB_ORIGIN}
+      NEXT_PUBLIC_API_ORIGIN: https://api.${BASE_DOMAIN}
+      NEXT_PUBLIC_AUTH_ORIGIN: https://auth.${BASE_DOMAIN}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
   caddy:
     build:
       context: ./caddy
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
+      - web
       - gateway
       - auth-gate
       - activator
