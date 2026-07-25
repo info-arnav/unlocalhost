@@ -9,6 +9,7 @@ export interface SessionClaims {
   email: string;
   name?: string | undefined;
   provider: 'github' | 'google';
+  userId?: string | undefined;
 }
 
 export interface SessionOptions {
@@ -55,6 +56,7 @@ export class SessionService {
         email,
         provider,
         name: typeof payload.name === 'string' ? payload.name : undefined,
+        userId: typeof payload.userId === 'string' ? payload.userId : undefined,
       };
     } catch {
       return null;

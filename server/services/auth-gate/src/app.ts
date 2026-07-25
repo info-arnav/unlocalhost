@@ -14,7 +14,8 @@ import { GitHubProvider } from './modules/oauth/providers/github.provider.js';
 import { GoogleProvider } from './modules/oauth/providers/google.provider.js';
 import type { OAuthProvider } from './modules/oauth/providers/provider.types.js';
 import { StateService } from './modules/oauth/state.service.js';
-import { SessionService } from './modules/session/session.service.js';
+import { SessionService } from '@unlocalhost/shared/session';
+import { UsersRepository } from './modules/users/users.repository.js';
 import { AllowlistRepository } from './modules/verify/allowlist.repository.js';
 import { VerifyController } from './modules/verify/verify.controller.js';
 import { createVerifyRouter } from './modules/verify/verify.routes.js';
@@ -61,7 +62,12 @@ export function createApp(
     config.BASE_DOMAIN,
     config.WEB_ORIGIN,
   );
-  const oauthController = new OAuthController(oauthService, sessions, state);
+  const oauthController = new OAuthController(
+    oauthService,
+    sessions,
+    state,
+    new UsersRepository(db),
+  );
 
   const allowlistRepository = new AllowlistRepository(db, redis);
   const verifyService = new VerifyService(

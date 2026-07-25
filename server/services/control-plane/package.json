@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@unlocalhost/shared": "*",
+    "cookie-parser": "^1.4.7",
     "drizzle-orm": "^0.45.2",
     "express": "^5.2.1",
     "helmet": "^8.3.0",
     "ioredis": "^5.11.1",
+    "jose": "^6.2.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.6",
     "tsx": "^4.23.1",
     "typescript": "^5.9.3"

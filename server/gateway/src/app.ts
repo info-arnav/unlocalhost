@@ -91,8 +91,8 @@ export function createApp(
   });
 
   app.use(
-    '/v1',
     createProxyMiddleware({
+      pathFilter: '/v1',
       target: config.CONTROL_PLANE_URL,
       changeOrigin: true,
       xfwd: true,

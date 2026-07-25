@@ -1,6 +1,7 @@
 import { badRequest } from '@unlocalhost/shared/error';
 import type { NextFunction, Request, Response } from 'express';
 import type { Config } from '../../config.js';
+import { requireSessionUser } from './session.middleware.js';
 import { approveSchema, pollSchema } from './device.schema.js';
 import type { DeviceService } from './device.service.js';
 import type { TokenService } from './token.service.js';
@@ -77,13 +78,13 @@ export class DeviceController {
       const parsed = approveSchema.safeParse(req.body);
 
       if (!parsed.success) {
-        next(badRequest('INVALID_BODY', 'userCode and userId are required'));
+        next(badRequest('INVALID_BODY', 'userCode is required'));
         return;
       }
 
       const approved = await this.devices.approve(
         parsed.data.userCode,
-        parsed.data.userId,
+        requireSessionUser(req),
       );
 
       if (!approved) {

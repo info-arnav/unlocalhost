@@ -41,6 +41,12 @@ credentials — `.env` files are gitignored and a pre-commit hook enforces it.
 ## Code guidelines
 
 - One concern per file. Organize by domain (`modules/auth/`), not by type.
+- **Every backend module uses the same layering**: `x.routes.ts` (paths only) →
+  `x.controller.ts` (HTTP in/out) → `x.service.ts` (business logic) → `x.repository.ts`
+  (data access), with `x.schema.ts` holding the Zod schemas. Controllers never query the
+  database; services never touch `req`/`res`.
+- **No HTML in backend services.** User-facing pages live in `web/`; services redirect to
+  `WEB_ORIGIN`.
 - **No comments.** Code should explain itself through naming and structure. If something
   needs a comment, rename or restructure it instead.
 - **No test files.** This project verifies changes by running them, not by test suites.

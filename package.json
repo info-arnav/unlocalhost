@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=web",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build --workspace=@unlocalhost/shared && npm run build --workspaces --if-present",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run build --workspace=@unlocalhost/shared && npm run typecheck --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"

@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { Config } from '../../config.js';
-import type { SessionService } from '../session/session.service.js';
+import type { SessionService } from '@unlocalhost/shared/session';
 import { forwardedRequest } from './verify.schema.js';
 import type { VerifyService } from './verify.service.js';
 

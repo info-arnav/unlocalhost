@@ -1,6 +1,7 @@
 import { badRequest, unauthorized } from '@unlocalhost/shared/error';
 import type { NextFunction, Request, Response } from 'express';
-import type { SessionService } from '../session/session.service.js';
+import type { SessionService } from '@unlocalhost/shared/session';
+import type { UsersRepository } from '../users/users.repository.js';
 import { callbackQuerySchema, providerParamSchema } from './oauth.schema.js';
 import type { OAuthService } from './oauth.service.js';
 import type { StateService } from './state.service.js';
@@ -10,6 +11,7 @@ export class OAuthController {
     private readonly service: OAuthService,
     private readonly sessions: SessionService,
     private readonly state: StateService,
+    private readonly users: UsersRepository,
   ) {}
 
   authorize = async (
@@ -71,10 +73,20 @@ export class OAuthController {
         query.data.code,
       );
 
+      const userId =
+        identity.provider === 'github'
+          ? await this.users.upsertByGithubId({
+              githubId: identity.providerAccountId,
+              githubLogin: identity.name,
+              email: identity.email,
+            })
+          : undefined;
+
       const token = await this.sessions.issue({
         email: identity.email,
         name: identity.name,
         provider: identity.provider,
+        userId,
       });
 
       this.sessions.attach(res, token);

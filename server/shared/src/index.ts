@@ -8,3 +8,4 @@ export * from './observability/index.js';
 export * from './security/index.js';
 export * from './crypto/index.js';
 export * from './domain/index.js';
+export * from './session/index.js';

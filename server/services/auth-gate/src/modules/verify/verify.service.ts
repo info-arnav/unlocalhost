@@ -1,5 +1,5 @@
 import { subdomainFromHost } from '@unlocalhost/shared/domain';
-import type { SessionClaims } from '../session/session.service.js';
+import type { SessionClaims } from '@unlocalhost/shared/session';
 import type { AllowlistRepository } from './allowlist.repository.js';
 
 export type VerifyOutcome =
