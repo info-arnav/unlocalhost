@@ -49,6 +49,7 @@ export function createApp(
       config.GITHUB_APP_CLIENT_ID,
       config.GITHUB_APP_CLIENT_SECRET,
       `${authOrigin}/auth/callback/github`,
+      logger,
     ),
     google: new GoogleProvider(
       config.GOOGLE_CLIENT_ID,

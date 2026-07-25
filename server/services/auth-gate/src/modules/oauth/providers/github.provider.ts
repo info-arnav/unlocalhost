@@ -1,4 +1,5 @@
 import { unauthorized } from '@unlocalhost/shared/error';
+import type { Logger } from '@unlocalhost/shared/logger';
 import type { VerifiedIdentity } from './provider.types.js';
 
 const AUTHORIZE_URL = 'https://github.com/login/oauth/authorize';
@@ -19,6 +20,7 @@ export class GitHubProvider {
     private readonly clientId: string,
     private readonly clientSecret: string,
     private readonly redirectUri: string,
+    private readonly logger: Logger,
   ) {}
 
   authorizeUrl(state: string): string {
@@ -51,9 +53,18 @@ export class GitHubProvider {
       throw unauthorized('OAUTH_EXCHANGE_FAILED', 'GitHub rejected the code');
     }
 
-    const body = (await response.json()) as { access_token?: string };
+    const body = (await response.json()) as {
+      access_token?: string;
+      error?: string;
+      error_description?: string;
+    };
 
     if (!body.access_token) {
+      this.logger.error(
+        { error: body.error, description: body.error_description },
+        'github token exchange returned no token',
+      );
+
       throw unauthorized('OAUTH_EXCHANGE_FAILED', 'GitHub returned no token');
     }
 
@@ -70,6 +81,19 @@ export class GitHubProvider {
     });
 
     if (!response.ok) {
+      const detail = await response.text().catch(() => '');
+
+      this.logger.error(
+        {
+          url,
+          status: response.status,
+          scopes: response.headers.get('x-oauth-scopes'),
+          accepted: response.headers.get('x-accepted-oauth-scopes'),
+          detail: detail.slice(0, 300),
+        },
+        'github profile lookup failed',
+      );
+
       throw unauthorized(
         'OAUTH_PROFILE_FAILED',
         'GitHub profile lookup failed',
