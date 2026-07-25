@@ -1,3 +1,42 @@
+# internal planning docs — not published
 docs
+
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# secrets — never commit these
 .env
+.env.*
+!.env.example
 */.env
+*.pem
+*.key
+secrets/
+
+# build output
+dist/
+build/
+out/
+.next/
+*.tsbuildinfo
+
+# test / coverage
+coverage/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# runtime data (local dev)
+pgdata/
+caddy-data/

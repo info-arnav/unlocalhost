@@ -1,0 +1,45 @@
+{
+  "name": "unlocalhost",
+  "version": "0.0.1",
+  "description": "Deploy localhost to a shareable, authenticated link from your AI coding agent.",
+  "license": "MIT",
+  "author": "Arnav Gupta (info-arnav)",
+  "homepage": "https://unlocalhost.tech",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/info-arnav/unlocalhost.git",
+    "directory": "server/mcp-server"
+  },
+  "keywords": [
+    "mcp",
+    "deploy",
+    "localhost",
+    "tunnel",
+    "hosting",
+    "vibe-coding"
+  ],
+  "type": "module",
+  "bin": {
+    "unlocalhost": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
+  }
+}

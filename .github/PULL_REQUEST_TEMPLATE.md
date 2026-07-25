@@ -12,6 +12,6 @@
 - [ ] If this touches auth-gate, sessions, allowlists, or MCP tokens — called out above
 - [ ] New endpoints check authn/authz
 
-## Testing
+## Verification
 
-<!-- How did you verify this works? -->
+<!-- What did you run to confirm this works? -->

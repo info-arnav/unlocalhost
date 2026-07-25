@@ -41,9 +41,12 @@ credentials — `.env` files are gitignored and a pre-commit hook enforces it.
 ## Code guidelines
 
 - One concern per file. Organize by domain (`modules/auth/`), not by type.
+- **No comments.** Code should explain itself through naming and structure. If something
+  needs a comment, rename or restructure it instead.
+- **No test files.** This project verifies changes by running them, not by test suites.
+  Please don't add test frameworks or test scripts.
 - No speculative abstractions — build for the current scope.
 - Validate at system boundaries (user input, external APIs); trust internal code.
-- Comments only where the *why* is non-obvious. Don't restate the code.
 - Security is part of every change: parameterize queries, treat all external input as
   untrusted, check authn/authz on every new endpoint, never log secrets.
 

@@ -1,0 +1,50 @@
+{
+  "name": "unlocalhost",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Turn localhost into a shareable link — with authentication built in.",
+  "license": "MIT",
+  "author": "Arnav Gupta (info-arnav)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/info-arnav/unlocalhost.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "web",
+    "server/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=web",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ]
+  }
+}

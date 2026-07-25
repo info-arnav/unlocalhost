@@ -1,0 +1,39 @@
+{
+	email {$ACME_EMAIL}
+}
+
+(wildcard_tls) {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+		resolvers 1.1.1.1
+	}
+}
+
+app.{$BASE_DOMAIN} {
+	import wildcard_tls
+	reverse_proxy web:3000
+}
+
+api.{$BASE_DOMAIN} {
+	import wildcard_tls
+	reverse_proxy control-plane:7000
+}
+
+auth.{$BASE_DOMAIN} {
+	import wildcard_tls
+	reverse_proxy auth-gate:7001
+}
+
+*.{$BASE_DOMAIN} {
+	import wildcard_tls
+
+	forward_auth auth-gate:7001 {
+		uri /verify
+		copy_headers X-Unlocalhost-Email X-Unlocalhost-App
+	}
+
+	reverse_proxy activator:7002 {
+		header_up Cookie "{$SESSION_COOKIE_NAME}=[^;]*;?\s*" ""
+		header_up X-Forwarded-Host {host}
+	}
+}

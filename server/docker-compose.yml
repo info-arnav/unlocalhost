@@ -1,0 +1,140 @@
+name: unlocalhost
+
+services:
+  postgres:
+    image: postgres:18.2-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 30s
+
+  control-plane:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      target: control-plane
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: 7000
+      DATABASE_URL: ${DATABASE_URL}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      MAX_CONCURRENT_BUILDS: ${MAX_CONCURRENT_BUILDS}
+      BUILD_TIMEOUT_MS: ${BUILD_TIMEOUT_MS}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:7000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 15s
+
+  auth-gate:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      target: auth-gate
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: 7001
+      DATABASE_URL: ${DATABASE_URL}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME}
+      AUTH_SECRET: ${AUTH_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:7001/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 15s
+
+  activator:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+      target: activator
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: 7002
+      DATABASE_URL: ${DATABASE_URL}
+      IDLE_TIMEOUT_MS: ${IDLE_TIMEOUT_MS}
+      SWEEP_INTERVAL_MS: ${SWEEP_INTERVAL_MS}
+      COLD_START_TIMEOUT_MS: ${COLD_START_TIMEOUT_MS}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:7002/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 15s
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      - auth-gate
+      - control-plane
+      - activator
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    stop_grace_period: 15s
+
+volumes:
+  pgdata:
+  caddy-data:
+  caddy-config:
