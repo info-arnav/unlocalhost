@@ -45,6 +45,9 @@ EXPOSE 8000
 CMD ["node", "server/gateway/dist/index.js"]
 
 FROM runtime AS control-plane
+USER root
+RUN apk add --no-cache git openssh-client
+USER node
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/server/shared/dist ./server/shared/dist
 COPY --from=build /app/server/shared/package.json ./server/shared/
