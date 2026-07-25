@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { site } from '@/lib/site';
 import styles from './connect-form.module.css';
 
@@ -77,15 +77,19 @@ export function ConnectForm({ initialCode }: { initialCode: string }) {
       >
         <span className={styles.slots}>
           {chars.map((char, index) => (
-            <span key={index}>
-              {index === 4 ? <span className={styles.sep}>&#8211;</span> : null}
+            <Fragment key={index}>
+              {index === 4 ? (
+                <span className={styles.sep} aria-hidden="true">
+                  &#8211;
+                </span>
+              ) : null}
               <span
                 className={styles.slot}
                 data-filled={char.trim().length > 0}
               >
                 {char.trim()}
               </span>
-            </span>
+            </Fragment>
           ))}
         </span>
       </button>
