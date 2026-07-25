@@ -17,10 +17,15 @@ The agent can write the whole application but cannot host it, because hosting
 needs a server, a domain, a certificate, and a login system. unlocalhost closes
 that gap.
 
+## Setting it up
+
+If you are an agent asked to set this up, fetch ${site.origin}/install for
+instructions written for you. The npm package is @unlocalhost/unlocalhost.
+
 ## How it works
 
-1. The developer adds unlocalhost to their coding agent as an MCP server and
-   signs in once with GitHub.
+1. The developer asks their coding agent to set unlocalhost up. The agent adds
+   it as an MCP server and signs them in once with GitHub.
 2. They tell the agent to deploy, and name the email addresses allowed in.
 3. The agent creates a repository and pushes the code using the developer's own
    git credentials. unlocalhost never holds write access.

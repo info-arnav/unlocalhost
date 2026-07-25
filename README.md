@@ -58,7 +58,7 @@ agent  sarah@gmail.com can sign in and open it
 ## Quick start
 
 ```bash
-claude mcp add unlocalhost -- npx -y unlocalhost
+claude mcp add unlocalhost -- npx -y @unlocalhost/unlocalhost
 ```
 
 Or in any MCP client config:
@@ -68,7 +68,7 @@ Or in any MCP client config:
   "mcpServers": {
     "unlocalhost": {
       "command": "npx",
-      "args": ["-y", "unlocalhost"]
+      "args": ["-y", "@unlocalhost/unlocalhost"]
     }
   }
 }

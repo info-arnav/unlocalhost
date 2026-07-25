@@ -8,6 +8,10 @@ import styles from './page.module.css';
 
 const faq = [
   {
+    q: 'What do I have to install?',
+    a: 'Nothing yourself. Paste one sentence into your coding agent and it adds unlocalhost, signs you in, and tells you when it is ready.',
+  },
+  {
     q: 'How do I share localhost with a friend?',
     a: 'Tell your coding agent to deploy it and name who should get in. You get back a real link, and only the people you named can open it after signing in with GitHub or Google.',
   },
@@ -177,10 +181,11 @@ export default function Home() {
           <div className={styles.steps}>
             <article className={styles.step}>
               <div className={styles.stepNum}>Step 1</div>
-              <h3>Connect once</h3>
+              <h3>Your agent sets it up</h3>
               <p>
-                Add unlocalhost to your coding agent and sign in with GitHub in
-                the browser. One visit, and you never do it again.
+                Paste one sentence into the agent you already have open. It
+                installs unlocalhost itself, then walks you through signing in
+                with GitHub. You never open a config file.
               </p>
             </article>
             <article className={styles.step}>
