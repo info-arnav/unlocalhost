@@ -74,7 +74,7 @@ server.registerTool(
   {
     title: 'Deploy a repository',
     description:
-      "Deploy a GitHub repository and get a private URL. IMPORTANT: before calling this, you must yourself create a GitHub repository and push the code using the user's own git credentials, and make sure .env is listed in .gitignore. Pass any .env values through the env argument instead of committing them.",
+      "Deploy a GitHub repository and get a private URL. IMPORTANT: before calling this, you must yourself create a GitHub repository and push the code using the user's own git credentials, and make sure .env is listed in .gitignore. Pass any .env values through the env argument instead of committing them. STORAGE: the deployed app gets a persistent disk at /app/data and an env var DATABASE_PATH set to /app/data/app.db. If the app stores data, use SQLite at process.env.DATABASE_PATH. There is no managed Postgres or MySQL, and anything written outside /app/data is lost on the next deploy.",
     inputSchema: deployInput,
   },
   async ({ repoFullName, emails, branch, env }) => {

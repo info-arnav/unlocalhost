@@ -88,11 +88,16 @@ export class DokkuClient {
     this.assertAppName(app);
 
     await this.exec(['storage:ensure-directory', app]);
-    await this.exec([
-      'storage:mount',
-      app,
-      `/var/lib/dokku/data/storage/${app}:${mountPath}`,
-    ]).catch(() => undefined);
+
+    const mount = `/var/lib/dokku/data/storage/${app}:${mountPath}`;
+
+    try {
+      await this.exec(['storage:mount', app, mount]);
+    } catch (error) {
+      const output = `${(error as Error).message}`.toLowerCase();
+
+      if (!output.includes('already')) throw error;
+    }
   }
 
   async setPorts(
