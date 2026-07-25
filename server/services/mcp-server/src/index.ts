@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createRequire } from 'node:module';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { ApiClient } from './api/client.js';
@@ -14,7 +15,11 @@ import {
 const api = new ApiClient(config.instance, config.token);
 const deviceLogin = new DeviceLogin(api);
 
-const server = new McpServer({ name: 'unlocalhost', version: '0.1.0' });
+const { version } = createRequire(import.meta.url)('../package.json') as {
+  version: string;
+};
+
+const server = new McpServer({ name: 'unlocalhost', version });
 
 function text(value: unknown) {
   return {

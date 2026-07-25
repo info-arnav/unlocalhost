@@ -1,6 +1,6 @@
 {
   "name": "@unlocalhost/unlocalhost",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Deploy localhost to a shareable, authenticated link from your AI coding agent.",
   "license": "MIT",
   "author": "Arnav Gupta (info-arnav)",
