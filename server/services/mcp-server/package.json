@@ -1,5 +1,5 @@
 {
-  "name": "unlocalhost",
+  "name": "@unlocalhost/unlocalhost",
   "version": "0.0.1",
   "description": "Deploy localhost to a shareable, authenticated link from your AI coding agent.",
   "license": "MIT",

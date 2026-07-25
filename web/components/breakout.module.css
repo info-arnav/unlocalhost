@@ -1,0 +1,126 @@
+.frame {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  margin-bottom: 34px;
+  padding: 26px 22px 46px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+}
+
+.frameLabel {
+  position: absolute;
+  top: -9px;
+  left: 20px;
+  padding-inline: 8px;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.inner {
+  display: grid;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.dim {
+  color: var(--text-muted);
+  opacity: 0.65;
+  margin-right: 8px;
+}
+
+.prompt,
+.local {
+  color: var(--text-muted);
+}
+
+.local b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.said {
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.escaped {
+  position: absolute;
+  left: 50%;
+  bottom: -25px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: calc(100% - 20px);
+  padding: 11px 20px;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: transform 0.2s ease;
+}
+
+.escaped:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.escapedText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lock {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  flex: none;
+}
+
+@media (max-width: 560px) {
+  .frame {
+    padding: 24px 18px 44px;
+  }
+
+  .inner {
+    font-size: 0.76rem;
+  }
+
+  .escaped {
+    font-size: 0.7rem;
+    padding: 10px 15px;
+    gap: 7px;
+  }
+}
+
+@media (max-width: 400px) {
+  .frame {
+    padding: 22px 14px 42px;
+  }
+
+  .inner {
+    font-size: 0.72rem;
+  }
+
+  .escaped {
+    font-size: 0.63rem;
+    padding: 9px 12px;
+    max-width: calc(100% - 8px);
+  }
+}

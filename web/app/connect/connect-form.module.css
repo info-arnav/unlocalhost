@@ -1,0 +1,94 @@
+.slots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.slot {
+  width: 38px;
+  height: 48px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease;
+}
+
+.slot[data-filled='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.sep {
+  align-self: center;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.tap {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: text;
+  width: 100%;
+}
+
+.submit {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.93rem;
+  font-weight: 560;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.submit:not(:disabled):hover {
+  background: var(--accent-hover);
+}
+
+.msg {
+  margin-top: 14px;
+  font-size: 0.86rem;
+}
+
+.err {
+  color: var(--danger);
+}
+.ok {
+  color: var(--live);
+}

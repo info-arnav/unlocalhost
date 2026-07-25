@@ -1,0 +1,132 @@
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.top {
+  display: grid;
+  gap: 48px;
+  padding-block: 64px 44px;
+}
+
+@media (min-width: 880px) {
+  .top {
+    grid-template-columns: 1.1fr 1.4fr;
+    gap: 64px;
+  }
+}
+
+.pitch {
+  max-width: 40ch;
+}
+
+.mark {
+  display: inline-flex;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  margin-bottom: 14px;
+}
+
+.dashed {
+  padding: 5px 11px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+}
+
+.solid {
+  padding: 5px 11px;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+}
+
+.arrow {
+  color: var(--accent);
+}
+
+.blurb {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.cols {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.colTitle {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.cols ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.cols a {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  transition: color 0.16s ease;
+}
+
+.cols a:hover {
+  color: var(--accent);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 22px 40px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.bottom a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line-strong);
+}
+
+.bottom a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--live) 22%, transparent);
+}
