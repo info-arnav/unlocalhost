@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.info-arnav/unlocalhost",
+  "description": "Deploy localhost to a private, authenticated link from your AI coding agent.",
+  "repository": {
+    "url": "https://github.com/info-arnav/unlocalhost",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@unlocalhost/unlocalhost",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Base URL of the unlocalhost instance to talk to. Defaults to the hosted instance. Set this to point the tools at your own self hosted deployment.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "UNLOCALHOST_URL"
+        },
+        {
+          "description": "API token. Normally written by the unlocalhost_login tool after you approve the device in a browser, so you should not need to set this by hand.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true,
+          "name": "UNLOCALHOST_TOKEN"
+        }
+      ]
+    }
+  ]
+}
